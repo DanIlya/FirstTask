@@ -36,7 +36,7 @@ int main()
         ee=e[ic];
     }
     printf("Total amount of segments is %d",k);
-
+    free(b); free(e);
     return 0;
-free(b); free(e);
+
 }
