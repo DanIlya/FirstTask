@@ -8,17 +8,8 @@ float r(int Ax,int Ay,int Bx,int By)
 
 int main()
 {
-    //FILE* fA = fopen("Coord.txt","r");
-
-    //if (fA == NULL)
-    //{
-    //    printf("Can not open file");
-    //    return -1;
-    //}
-
     int n,minr,i,imin;
 
-    //fscanf(fA,"%d",&n);
     scanf("%d",&n);
 
     int* Ax = malloc(n*sizeof(int));
@@ -26,45 +17,55 @@ int main()
 
     for (i=0;i<n;i++) //Start = A[0], End = A[n-1]
     {
-        //fscanf(fA,"%d %d",&Ax[i],&Ay[i]);
         scanf("%d %d",&Ax[i],&Ay[i]);
-    }
-
-    int xmn,ymn; //mn = middle of nowhere
-    xmn=1;
-    ymn=1;
-    for (i=0;i<n;i++)
-    {
-        xmn= xmn+ Ax[i]*2;
-        ymn= ymn+ Ay[i]*2;
     }
 
      int k=1;
      int c=0; //current position
 
-
-    while (k<n-1)
-    {
-        minr=r(Ax[c],Ay[c],xmn,ymn);
-        imin=-1;
-        for (i=0;i<n;i++)
+     int Nconst = n;
+     int j;
+     while (k<Nconst-1)
+     {
+        if (c < n-2)
         {
-            if ( (i!=c)&& (i!=n-1) && (r(Ax[c],Ay[c],Ax[i],Ay[i])<minr))
+            minr=r(Ax[c],Ay[c],Ax[c+1],Ay[c+1]);
+            imin=c+1;
+        }
+        else
+        {
+            minr=r(Ax[c],Ay[c],Ax[c-1],Ay[c-1]);
+            imin=c-1;
+        }
+        for (i=1;i<n;i++)// find the nearest point
+        {
+            if ( (i!=c)&& (i!=n-1) && (i!=0) && (r(Ax[c],Ay[c],Ax[i],Ay[i])<minr))
             {
                 minr = r(Ax[c],Ay[c],Ax[i],Ay[i]);
                 imin = i;
             }
 
         }
-        printf("%d step: go to A%d x=%d y=%d \n",k,imin,Ax[imin],Ay[imin]);
+        printf("%d step: go to x=%d y=%d \n",k,Ax[imin],Ay[imin]);
         k=k+1;
-        Ax[c] = xmn;
-        Ay[c] = ymn;
-        c= imin;
-    }
-    printf("On the last step: go to the final destination (B) x=%d y=%d \n",Ax[n-1],Ay[n-1]);
-    //fclose(fA);
+        for (j = c; j<n-2; j++)//Delete already visited point
+        {
+            Ax[j] = Ax[j+1];
+            Ay[j] = Ay[j+1];
+        }
+        n = n-1;
+        if (imin > c)//correct c after deleting
+        {
+           c= imin -1;
+        }
+        else
+        {
+            c = imin;
+        }
 
-free(Ay); free(Ax);
+    }
+    printf("On the last step: go to the final destination (B) x=%d y=%d \n",Ax[Nconst-1],Ay[Nconst-1]);
+
+    free(Ay); free(Ax);
     return 0;
 }
