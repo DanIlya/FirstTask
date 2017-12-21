@@ -8,7 +8,7 @@ float r(int Ax,int Ay,int Bx,int By)
 
 int main()
 {
-    int n,minr,i,imin;
+    int n,minr,i,imin, dx, dy;
 
     scanf("%d",&n);
 
@@ -19,6 +19,27 @@ int main()
     {
         scanf("%d %d",&Ax[i],&Ay[i]);
     }
+    //Find the nearest to the center
+
+    imin = 0;
+    minr = r(Ax[0],Ay[0],0,0);
+    for (i = 0; i < n; i++)
+    {
+        if (r(Ax[i], Ay[i], 0,0) < minr)
+        {
+             imin = i;
+             minr = r(Ax[i], Ay[i], 0,0);
+        }
+    }
+
+    dx = Ax[imin];
+    dy = Ay[imin];
+    Ax[imin] = Ax[0];
+    Ay[imin] = Ay[0];
+    Ax[0] = dx;
+    Ay[0] = dy;
+
+    printf("Start from the nearest to the (0,0): A[%d] (%d,%d)\n",imin+1, dx, dy);
 
      int k=1;
      int c=0; //current position
@@ -32,14 +53,18 @@ int main()
             minr=r(Ax[c],Ay[c],Ax[c+1],Ay[c+1]);
             imin=c+1;
         }
-        else
+        else if (c > 1)
         {
             minr=r(Ax[c],Ay[c],Ax[c-1],Ay[c-1]);
             imin=c-1;
         }
+        else
+        {
+            imin = c -1;
+        }
         for (i=1;i<n;i++)// find the nearest point
         {
-            if ( (i!=c)&& (i!=n-1) && (i!=0) && (r(Ax[c],Ay[c],Ax[i],Ay[i])<minr))
+            if ( (i!=c) && (r(Ax[c],Ay[c],Ax[i],Ay[i])<minr))
             {
                 minr = r(Ax[c],Ay[c],Ax[i],Ay[i]);
                 imin = i;
@@ -48,7 +73,7 @@ int main()
         }
         printf("%d step: go to x=%d y=%d \n",k,Ax[imin],Ay[imin]);
         k=k+1;
-        for (j = c; j<n-2; j++)//Delete already visited point
+        for (j = c; j<n-1; j++)//Delete already visited point
         {
             Ax[j] = Ax[j+1];
             Ay[j] = Ay[j+1];
@@ -62,9 +87,10 @@ int main()
         {
             c = imin;
         }
-
     }
-    printf("On the last step: go to the final destination (B) x=%d y=%d \n",Ax[Nconst-1],Ay[Nconst-1]);
+
+
+    printf("On the last step: go to x=%d y=%d \n",Ax[1],Ay[1]);
 
     free(Ay); free(Ax);
     return 0;
